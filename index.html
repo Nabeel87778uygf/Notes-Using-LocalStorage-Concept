@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Practice</title>
+</head>
+
+<body>
+    <div class="input-container">
+        <input type="text" id="note-title" placeholder="enter not title" /><br><br>
+        <textarea id="note-desc" placeholder="Enter note description "></textarea><br><br>
+        <button id="add-btn" onclick="addNote()">Add Note</button>
+    </div>
+    <div class="notes-container" id="notes-container"></div>
+    <script>
+        let container = document.getElementById("notes-container");
+        let editIndex = null;
+
+        function addNote() {
+            let title = document.getElementById("note-title").value.trim();
+            let desc = document.getElementById("note-desc").value.trim();
+
+
+            if (title === "" || desc === "") {
+                alert("please enter both title and description");
+                return;
+            }
+
+            let notesData = JSON.parse(localStorage.getItem("notes")) || [];
+
+            if (editIndex !== null) {
+                notesData[editIndex].title = title;
+                notesData[editIndex].desc = desc;
+                // document.getElementById('add-btn').textContent = "Add Note";
+            } else {
+                notesData.push({ title, desc });
+
+            }
+            // notesData.push({ title, desc });
+            localStorage.setItem("notes", JSON.stringify(notesData));
+
+            title.value = "";
+            desc.value = "";
+
+            showNotes();
+
+        }
+
+        function showNotes() {
+            let notesData = JSON.parse(localStorage.getItem("notes")) || [];
+            container.innerHTML = "";
+
+            notesData.forEach((note, index) => {
+                container.innerHTML += `
+                <div class="note-card">
+                    <h3>${note.title}</h3>
+                    <p>${note.desc}</p>
+                    <div class="btn-group">
+                    <button class="edit-btn" onclick="editNote(${index})">Edit</button>
+                    <button class="remove-btn" onclick="deleteNote(${index})">Delete</button>
+                </div>
+                    </div>`
+
+            });
+        }
+
+        function deleteNote(index) {
+            let notesData = JSON.parse(localStorage.getItem("notes")) || [];
+            notesData.splice(index, 1);
+            localStorage.setItem("notes", JSON.stringify(notesData));
+
+            showNotes();
+        }
+
+        function editNote(index) {
+            let notesData = JSON.parse(localStorage.getItem("notes")) || [];
+            document.getElementById("note-title").value = notesData[index].title;
+            document.getElementById("note-desc").value = notesData[index].desc;
+            document.getElementById('add-btn').textContent = "update Note";
+            editIndex = index
+
+        }
+        showNotes();
+
+
+    </script>
+</body>
+
+</html>
