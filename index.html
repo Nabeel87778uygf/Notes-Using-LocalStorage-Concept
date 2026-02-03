@@ -19,8 +19,11 @@
         let editIndex = null;
 
         function addNote() {
-            let title = document.getElementById("note-title").value.trim();
-            let desc = document.getElementById("note-desc").value.trim();
+            let titleInput = document.getElementById("note-title");
+            let descInput = document.getElementById("note-desc");
+
+            let title = taskInput.value.trim();
+            let desc = descInput.value.trim();
 
 
             if (title === "" || desc === "") {
@@ -41,8 +44,8 @@
             // notesData.push({ title, desc });
             localStorage.setItem("notes", JSON.stringify(notesData));
 
-            title.value = "";
-            desc.value = "";
+            titleInput.value = "";
+            descInput.value = "";
 
             showNotes();
 
